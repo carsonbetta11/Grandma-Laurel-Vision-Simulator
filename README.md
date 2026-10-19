@@ -1,5 +1,7 @@
 # Through her eyes
 
+[Open the live simulator](https://carsonbetta11.github.io/Grandma-Laurel-Vision-Simulator/) in iPhone Safari. Tap **Start Camera** and allow access.
+
 The complete app is **index.html**. No libraries, installation, API keys, accounts, or build step.
 
 ## Put it on GitHub Pages
@@ -50,6 +52,6 @@ Only index.html needs uploading. Do not upload your personal photos. The preview
 - Rendered in the desktop app's browser; WebGL2 chart, photo processing, two-point photo scaling, calculator presets, screenshot zoom and captioned PNG export exercised.
 - Phone-sized portrait layout inspected at 390 × 844; landscape layout checked separately.
 - A synthetic 1200 × 800 edge-and-color image was blurred at 100 px/degree and sigma 2.0 arcmin. The exported edge matched an independent linear-light Gaussian calculation within one 8-bit sRGB level. Interior color patches retained their exact original RGB values. The exported image was visually checked for its caption and correct orientation.
-- No personal photo was used for verification, and no publishing was performed.
+- No personal photo was used for verification. The page was published on GitHub Pages on October 19, 2026; its HTTPS address was opened successfully in Safari on this Mac.
 
 Research context is linked in the app's About panel, including [Legge & Bigelow on reading and print size](https://pmc.ncbi.nlm.nih.gov/articles/PMC3428264/) and [Clinical Methods on typical fields](https://www.ncbi.nlm.nih.gov/books/NBK220/).

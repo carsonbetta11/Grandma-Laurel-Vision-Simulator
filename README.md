@@ -2,28 +2,45 @@
 
 [Open the live page](https://carsonbetta11.github.io/Grandma-Laurel-Vision-Simulator/).
 
-A self-contained Blender-rendered room with eight embedded panoramas, live laptop text, TV artwork and pharmacy-label artwork. No external assets, dependencies or build step.
+Self-contained HTML with a Blender-rendered room, six supplied comparison photos and a local personal-photo tool. No libraries, build step or external assets.
 
-## Use
+## Room
 
-- **Fullscreen** expands the simulation. **Done** or Escape returns. Phones use a screen-filling page view; Safari's own browser bars may remain. Wider screens also request native fullscreen when available.
-- **Pinch** to magnify, then drag to pan. **Fit** returns to the full view. Desktop users can double-click or pinch a trackpad; with the scene focused, + / − zoom and 0 fits.
-- At normal magnification, drag or use keyboard arrows to look around.
-- Switch between **20/70 · left eye** and **Clear reference** at the same magnification and position.
-- Text size and eye-to-laptop distance change the underlying scene. Reduced contrast and glare are optional and start off. **Reset** restores defaults.
+Reported near vision is 20/70 in the left eye; the right eye has no vision. Prescription glasses are used, but test distance, correction during testing and distance acuity are unknown. The numerical angular-blur model is retained as a general illustration; it is not a measured prediction of acuity at every distance. Contrast and glare remain optional and off by default.
 
-Magnification applies a CSS transform outside the blur layer: the scene and its blur grow together. Pinching and panning while magnified do not rerun the room renderer, resize its canvas, alter the blur radius or move the virtual eye. Actual layout changes (fullscreen or device rotation) fit and render the scene for the new viewport; settings and looking around update it normally.
+Drag at normal magnification to look around. Pinch, double-click or use + / − with the room focused to magnify; drag while magnified to pan. Fit (or 0) restores the frame. Clear reference and the illustrative near-vision mode stay aligned. Text size and eye-to-laptop distance change the underlying scene; Reset restores defaults.
 
-This is an illustrative approximation, not a clinical measurement of one person's vision. The page has a brief explanation under **About this view**.
+The original 1400 × 1000 pill-label artwork is rendered independently on overlapping curved CSS-3D strips, at its original physical size and placement. This removes the forced square texture and room-canvas resolution bottleneck for label detail. The same parent filter covers room, laptop, TV and labels once. Magnification scales that filtered scene without changing its blur radius, focal length, canvas size or virtual eye.
 
-## Hosting and source
+## Photo Comparison
 
-GitHub Pages serves **index.html** from the root of **main**. Only the page, this guide, `.gitignore` and `.nojekyll` are tracked. All artwork stays embedded; source scenes and local QA files are not uploaded.
+Manual swipe, arrows and keyboard navigation, in order:
 
-The original parallel-project HTML remains unchanged separately on the Mac. This checkout now contains the streamlined UI and fullscreen/magnification changes. Future parallel-project edits do not automatically synchronize here.
+1. Computer — Clear
+2. Computer — Blurred
+3. Pills — Clear
+4. Pills — Blurred
+5. Thermostat — Clear
+6. Thermostat — Blurred
 
-History: the photo-only app is recoverable at **294397d**; the unmodified room-page import is **6f481ed**.
+All six supplied PNGs are embedded byte-for-byte without extra filtering or cropping. They are supplied illustrations, not clinically calibrated 20/70 examples. Pinch/double-click magnifies the existing image; drag pans while magnified. Fit resets. Paired clear/blurred images retain the same zoom and pan; at normal magnification, a horizontal swipe changes slides. There is no autoplay.
+
+## Add your own
+
+The large green button opens the personal-photo workspace. Choose photo opens the device picker. Original / Blurred compare the same framing; Fit resets magnification. Fullscreen expands the workspace.
+
+The earlier WebGL2 Gaussian-blur renderer is reused: the full supported photo is blurred once on import into a cached texture. Zoom, pan, mode switches, resize and fullscreen only present the existing texture. The illustrative default assumes a 64-degree photo frame and uses the same angular Gaussian parameter as the room, rather than inferring scene geometry or test distance. There is no calibration UI. Processing is limited to 3072 pixels on the longest side and 6 megapixels for phone memory use. Very large photos are downsampled once before processing.
+
+Personal photos remain in device memory, are not stored or uploaded, and disappear on reload. The page has no outbound application requests; CSP blocks connections. The six public comparison images are part of the app and separate from personal photo selection.
+
+## Fullscreen and hosting
+
+Fullscreen / Done expands each viewer. Phones use a screen-filling page view; Safari browser bars may remain. Wider screens also request native fullscreen when available. Escape exits. Room viewport changes fit and render the room again; image viewers retain the cached image/blur.
+
+GitHub Pages serves index.html from the root of main. Only index.html, this guide, .gitignore and .nojekyll are tracked. The parallel project's original HTML remains separate and unchanged on the Mac.
+
+History: photo-only app at 294397d; unmodified room import at 6f481ed; streamlined room/fullscreen UI at 142b031.
 
 ## Verification
 
-Syntax and gesture tests check pinch anchoring, pan handoff, bounds, Fit, and zero renderer calls during magnification. Browser checks cover desktop and phone-sized layouts, expanded view, comparison, unchanged filter/canvas/camera during zoom, and preserved embedded assets. Phone-sized browser checks are not a physical-iPhone multitouch test.
+Static and gesture checks cover exact source-image preservation/order, pinch anchoring, pan handoff, swipe/cancellation, bounds, Fit, removed-control absence, unchanged room assets/blur parameter and a single photo-import blur call. Browser checks cover clear/simulated label detail, all six slides, swipe-style drag, paired magnification, local photo import/replacement, unchanged cached-blur build count during zoom/pan/comparison/fullscreen, and desktop/phone portrait/landscape layouts. Physical iPhone multitouch still requires a device check.

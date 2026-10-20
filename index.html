@@ -27,7 +27,7 @@ h2{font:normal clamp(25px,2.5vw,32px)/1.2 Georgia,serif;margin:0 0 18px}#photoCo
 <div class="photo-tools"><button id="personalOriginal" aria-pressed="false" disabled>Original</button><button id="personalBlurred" aria-pressed="true" disabled>Blurred</button><button id="choosePhoto">Choose photo</button><input id="personalFile" type="file" accept="image/*" hidden></div>
 <p id="photoProgress" class="photo-message" role="status" hidden></p><p id="photoError" class="photo-message" role="alert" hidden></p>
 </div></div></section>
-<div class="below"><details><summary>About this view</summary><p>Reported near vision: 20/70 in the left eye; no vision in the right eye. Prescription glasses are used, but testing distance, correction during testing and distance acuity are unknown. This room uses a general illustrative blur, not a measured prediction at each distance. Contrast and glare are optional, unmeasured effects.</p><p>Pinch or double-click to magnify the existing view. The blur enlarges with it; magnifying does not move the simulated eye closer. Tap Fit to return, then drag to look around.</p><p>Personal photos use an assumed 64° frame and a fixed illustrative blur; their real viewing distance is unknown. Photos are processed only on this device.</p><p>Blender-rendered room with independent laptop text, TV graphics and pill labels. The Gaussian blur model uses a chosen 10% contrast threshold at 8.57 cycles/degree. <a href="https://pubmed.ncbi.nlm.nih.gov/2288101/" target="_blank" rel="noreferrer">Blur research</a>.</p></details></div></main>
+<div class="below"><details><summary>About this view</summary><p>Reported near vision: 20/70 in the left eye; no vision in the right eye. Prescription glasses are used, but testing distance, correction during testing and distance acuity are unknown. This room uses a general illustrative blur, not a measured prediction at each distance. Contrast and glare are optional, unmeasured effects.</p><p>Pinch or double-click to magnify the existing view. The blur enlarges with it; magnifying does not move the simulated eye closer. Tap Fit to return, then drag to look around.</p><p>Personal-photo blur approximately matches the supplied blurred examples and is fixed before magnification; real viewing distance is unknown. Photos are processed only on this device.</p><p>Blender-rendered room with independent laptop text, TV graphics and pill labels. The Gaussian blur model uses a chosen 10% contrast threshold at 8.57 cycles/degree. <a href="https://pubmed.ncbi.nlm.nih.gov/2288101/" target="_blank" rel="noreferrer">Blur research</a>.</p></details></div></main>
 <script>
 (()=>{
 'use strict';
@@ -215,8 +215,9 @@ try{
 'use strict';
 const $=id=>document.getElementById(id),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const MAX_RADIUS=48;
-// Assumed 64-degree photo frame; illustrative only, never inferred from a photo.
-const sigma=60*Math.sqrt(Math.log(10)/(2*Math.PI**2*(60/7)**2));
+// Match the supplied comparison photos: roughly 2.5 source pixels at 1536px wide.
+// Converted for the existing 64-degree renderer interface, not a clinical acuity.
+const sigma=2.5*60*64/1536;
 function setMessage(id,text){$(id).textContent=text;$(id).hidden=!text}
 const VERT = `#version 300 es
 precision highp float;
@@ -379,7 +380,7 @@ $('personalFile').onchange=async e=>{
   renderer.upload(img,img.naturalWidth,img.naturalHeight,scale);
   // Only photo import builds the blur. Zoom, pan, toggles and resize only present it.
   if(!renderer.filter(renderer.w/64,1))throw Error('Could not process this photo.');
-  $('personalCanvas').dataset.blurBuilds=String(++blurBuilds);$('personalCanvas').hidden=false;$('personalEmpty').hidden=true;
+  $('personalCanvas').dataset.blurSigmaPx=renderer.sigmaPx.toFixed(4);$('personalCanvas').dataset.blurBuilds=String(++blurBuilds);$('personalCanvas').hidden=false;$('personalEmpty').hidden=true;
   for(const id of ['personalOriginal','personalBlurred','personalExpand'])$(id).disabled=false;
   setOriginal(false);personal.fit();$('choosePhoto').textContent='Choose another';
  }catch(error){if(ticket===epoch)setMessage('photoError',error.message||'Could not open this photo.')}
